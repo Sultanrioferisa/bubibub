@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuis Rantai Makanan</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f9f9;
+            color: #333;
+        }
+        header {
+            background-color: #4caf50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        nav {
+            background-color: #333;
+            overflow: hidden;}
+             nav a {
+            float: left;
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+        nav a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+        .card-item {
+            background-color: #e8f5e9;
+            margin: 10px;
+            padding: 15px;
+            flex: 1 1 calc(30% - 20px);
+            text-align: center;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);}
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #4caf50;
+        }
+        .question {
+            margin-bottom: 20px;
+        }
+        .options {
+            list-style: none;
+            padding: 0;
+        }
+        .options li {
+            margin-bottom: 10px;
+        }
+        .options input[type="radio"] {
+            margin-right: 10px;
+        }
+        button {
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            border: 2px solid #4caf50;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            padding: 20px;
+            text-align: center;
+        }
+        .popup button {
+            margin-top: 20px;
+        }
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Kuis Rantai Makanan</h1>
+        <p>Uji pemahamanmu tentang rantai makanan!</p>
+        <nav>
+            <a href="index.html">Pengantar</a>
+            <a href="#materi">Materi</a>
+            <a href="latihan.html">Latihan</a>
+            <a href="#kontak">Kontak</a>
+        </nav>
+    </header>
+   
+    <div class="container">
+        <form id="quizForm">
+            <div class="question">
+                <h2>1. Apa yang dimaksud dengan produsen dalam rantai makanan?</h2>
+                <ul class="options">
+                    <li><label><input type="radio" name="q1" value="a"> Hewan yang memakan tumbuhan</label></li>
+                    <li><label><input type="radio" name="q1" value="b"> Mikroorganisme yang menguraikan sisa-sisa makhluk hidup</label></li>
+                    <li><label><input type="radio" name="q1" value="c"> Tumbuhan yang menghasilkan makanan melalui fotosintesis</label></li>
+                </ul>
+            </div>
+            <div class="question">
+                <h2>2. Hewan yang memakan tumbuhan disebut?</h2>
+                <ul class="options">
+                    <li><label><input type="radio" name="q2" value="a"> Konsumen tingkat pertama</label></li>
+                    <li><label><input type="radio" name="q2" value="b"> Produsen</label></li>
+                    <li><label><input type="radio" name="q2" value="c"> Dekomposer</label></li>
+                </ul>
+            </div>
+            <div class="question">
+                <h2>3. Apa fungsi dekomposer dalam rantai makanan?</h2>
+                <ul class="options">
+                    <li><label><input type="radio" name="q3" value="a"> Menghasilkan makanan</label></li>
+                    <li><label><input type="radio" name="q3" value="b"> Menguraikan sisa makhluk hidup</label></li>
+                    <li><label><input type="radio" name="q3" value="c"> Memakan hewan lain</label></li>
+                </ul>
+            </div>
+            <button type="button" onclick="checkAnswers()">Kirim Jawaban</button>
+        </form>
+    </div>
+
+    <!-- Popup -->
+    <div class="overlay" id="overlay"></div>
+    <div class="popup" id="popup">
+        <p id="popupMessage"></p>
+        <button onclick="closePopup()">Tutup</button>
+    </div>
+
+    <script>
+        function checkAnswers() {
+            // Kunci jawaban
+            const answers = {
+                q1: "c",
+                q2: "a",
+                q3: "b"
+            };
+
+            let score = 0; // Variabel skor
+            const form = document.getElementById('quizForm');
+
+            // Cek jawaban siswa
+            for (let question in answers) {
+                const userAnswer = form.elements[question].value;
+                if (userAnswer === answers[question]) {
+                    score++;
+                }
+            }
+
+            // Tampilkan hasil di pop-up
+            const popup = document.getElementById('popup');
+            const overlay = document.getElementById('overlay');
+            const message = document.getElementById('popupMessage');
+            
+            message.textContent = `Skor Anda: ${score} dari 3`;
+            message.style.color = score === 3 ? "green" : "red";
+
+            popup.style.display = "block";
+            overlay.style.display = "block";
+        }
+
+        function closePopup() {
+            // Tutup pop-up
+            const popup = document.getElementById('popup');
+            const overlay = document.getElementById('overlay');
+            
+            popup.style.display = "none";
+            overlay.style.display = "none";
+        }
+    </script>
+</body>
+</html>
